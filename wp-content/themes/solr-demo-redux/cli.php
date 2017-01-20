@@ -52,6 +52,7 @@ WP_CLI::add_command( 'import-books', function( $args ){
 				}
 			}
 		}
+		WP_CLI\Utils\wp_clear_object_cache();
 	}
 	fclose( $f );
 	echo PHP_EOL;
