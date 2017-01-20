@@ -1,0 +1,249 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the solr-power package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: solr-power 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/pantheon-systems/solr-power/issues\n"
+"POT-Creation-Date: 2016-12-19 16:34-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: includes/class-solrpower-facet-widget.php:49
+msgid "Title:"
+msgstr ""
+
+#: includes/class-solrpower-options.php:58
+msgid "Couldn't locate the options page."
+msgstr ""
+
+#: includes/class-solrpower-options.php:318
+msgid "Ping Success!"
+msgstr ""
+
+#: includes/class-solrpower-options.php:320
+msgid "Ping Failed!"
+msgstr ""
+
+#: includes/class-solrpower-options.php:328
+msgid "Configuration has been copied to all blogs!"
+msgstr ""
+
+#: includes/class-solrpower-options.php:335
+msgid "Index Optimized!"
+msgstr ""
+
+#: includes/class-solrpower-options.php:342
+#: includes/class-solrpower-options.php:350
+msgid "All Indexed Pages Deleted!"
+msgstr ""
+
+#: includes/class-solrpower-options.php:369
+msgid "Action failed. Please try again."
+msgstr ""
+
+#: includes/class-solrpower-sync.php:355
+msgid "Post Information is NULL"
+msgstr ""
+
+#: includes/class-solrpower.php:66
+msgid ""
+"Before you can activate this plugin, you must first <a href=\"https://"
+"pantheon.io/docs/articles/sites/apache-solr/\">activate Solr</a> in your "
+"Pantheon Dashboard."
+msgstr ""
+
+#: includes/class-solrpower.php:72
+msgid "This plugin requires WordPress 3.0 or greater."
+msgstr ""
+
+#: includes/class-solrpower.php:121
+msgid "Settings"
+msgstr ""
+
+#: includes/legacy-functions.php:11
+msgid "Score"
+msgstr ""
+
+#: includes/legacy-functions.php:12
+msgid "Date"
+msgstr ""
+
+#: includes/legacy-functions.php:13
+msgid "Last Modified"
+msgstr ""
+
+#: includes/legacy-functions.php:23
+msgid "Descending"
+msgstr ""
+
+#: includes/legacy-functions.php:24
+msgid "Ascending"
+msgstr ""
+
+#: includes/legacy-functions.php:35
+msgid "Sort By:"
+msgstr ""
+
+#: includes/legacy-functions.php:35
+msgid "Order By:"
+msgstr ""
+
+#: solr-options-page.php:38
+msgid "Solr Power"
+msgstr ""
+
+#: solr-options-page.php:45
+msgid "Info"
+msgstr ""
+
+#: solr-options-page.php:49 views/options/action.php:3
+msgid "Actions"
+msgstr ""
+
+#: solr-power.php:47
+msgid ""
+"The Solr Power plugin requires PHP 5.4 to function properly and <strong>has "
+"not</strong> been activated.<br />Please upgrade PHP and re-activate the "
+"Solr Power plugin. <a href=\"http://www.wpupdatephp.com/update/\" target="
+"\"_blank\">Learn more.</a>"
+msgstr ""
+
+#: solr-power.php:54
+msgid ""
+"The Solr Power plugin requires PHP 5.4 to function properly and had been "
+"<strong>deactivated</strong>.<br />Please upgrade PHP and re-activate the "
+"Solr Power plugin. <a href=\"http://www.wpupdatephp.com/update/\" target="
+"\"_blank\">Learn more.</a>"
+msgstr ""
+
+#: solr-power.php:82
+msgid ""
+"The Solr Power plugin requires environment variables for "
+"<pre>PANTHEON_INDEX_HOST</pre> and <pre>PANTHEON_INDEX_PORT</pre> to "
+"function properly.<br />The Solr Power plugin <strong>has not</strong> been "
+"activated.<br />Please configure the environment variables and re-activate "
+"the Solr Power plugin. "
+msgstr ""
+
+#: solr-power.php:89
+msgid ""
+"The Solr Power plugin requires environment variables for "
+"<pre>PANTHEON_INDEX_HOST</pre> and <pre>PANTHEON_INDEX_PORT</pre> to "
+"function properly.<br />The Solr Power plugin <strong>has been deactivated</"
+"strong>.<br />Please configure the environment variables and re-activate the "
+"Solr Power plugin. "
+msgstr ""
+
+#: templates/solr-search-results.php:4
+msgid "Search Results"
+msgstr ""
+
+#: templates/solr-search-results.php:17
+msgctxt "Used between list items, there is a space after the comma."
+msgid ", "
+msgstr ""
+
+#: templates/solr-search-results.php:30
+msgid "Posts navigation"
+msgstr ""
+
+#: templates/solr-search-results.php:40
+msgid "Previous page"
+msgstr ""
+
+#: templates/solr-search-results.php:41
+msgid "Next page"
+msgstr ""
+
+#: templates/solr-search-results.php:42
+msgid "Page"
+msgstr ""
+
+#: templates/solr-search-results.php:51
+msgid "Sorry, no posts matched your criteria."
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:52
+msgctxt "taxonomy general name"
+msgid "Genres"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:53
+msgctxt "taxonomy singular name"
+msgid "Genre"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:54
+msgid "Search Genres"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:55
+msgid "All Genres"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:56
+msgid "Parent Genre"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:57
+msgid "Parent Genre:"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:58
+msgid "Edit Genre"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:59
+msgid "Update Genre"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:60
+msgid "Add New Genre"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:61
+msgid "New Genre Name"
+msgstr ""
+
+#: tests/phpunit/class-solr-test-base.php:62
+msgid "Genre"
+msgstr ""
+
+#: views/options/action.php:9
+msgid "Check Server Settings"
+msgstr ""
+
+#: views/options/action.php:11 views/options/action.php:23
+#: views/options/action.php:35 views/options/action.php:46
+#: views/options/action.php:59 views/options/action.php:77
+msgid "Execute"
+msgstr ""
+
+#: views/options/action.php:21
+msgid "Push Solr Configuration to All Blogs"
+msgstr ""
+
+#: views/options/action.php:33
+msgid "Optimize Index"
+msgstr ""
+
+#: views/options/action.php:44
+msgid "Delete All"
+msgstr ""
+
+#: views/options/action.php:57
+msgid "Repost schema.xml"
+msgstr ""
+
+#: views/options/action.php:75
+msgid "Index Searchable Post Types"
+msgstr ""
