@@ -16,6 +16,9 @@
 		<div class="row">
 			<div class="columns medium-8 medium-centered">
 				<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo bloginfo( 'name' ); ?></a>
+				<?php if ( isset( $wp_query->sdr_total_time ) ) : ?>
+					<div><strong>Query time:</strong> <?php echo esc_html( round( $wp_query->sdr_total_time, 3 ) ); ?> seconds</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</header>
