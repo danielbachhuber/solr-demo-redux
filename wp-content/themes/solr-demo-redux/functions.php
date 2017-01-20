@@ -5,7 +5,11 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 }
 
 function sdr_get_book_meta() {
-	return array( 'creator', 'sponsor' );
+	return array( 'creator', 'sponsor', 'publisher', 'year' );
+}
+
+function sdr_get_book_tax() {
+	return array( 'collection', 'subject' );
 }
 
 add_action( 'init', function(){
@@ -21,6 +25,14 @@ add_action( 'init', function(){
 			'name'           => 'Collections',
 			'singular_name'  => 'Collection',
 		),
+		'show_admin_column' => true,
+	) );
+	register_taxonomy( 'subject', array( 'book' ), array(
+		'labels' => array(
+			'name'           => 'Subjects',
+			'singular_name'  => 'Subject',
+		),
+		'show_admin_column' => true,
 	) );
 });
 

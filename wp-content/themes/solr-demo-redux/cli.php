@@ -39,9 +39,17 @@ WP_CLI::add_command( 'import-books', function( $args ){
 							update_post_meta( $post_id, $key, $book[ $k ] );
 						}
 					}
+					foreach( sdr_get_book_tax() as $tax ) {
+						$k = 'BookMeta_' . ucwords( $tax ) . 's';
+						if ( isset( $book[ $k ] ) ) {
+							$bits = explode( ';', $book[ $k ] );
+							$bits = array_map( 'trim', $bits );
+							wp_set_object_terms( $post_id, $bits, $tax );
+						}
+					}
 					$count++;
+					echo '.';
 				}
-				echo '.';
 			}
 		}
 	}
