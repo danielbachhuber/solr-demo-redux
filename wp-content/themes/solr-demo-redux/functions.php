@@ -53,7 +53,7 @@ add_action( 'init', function(){
 });
 
 if ( class_exists( 'Pantheon_Cache' ) ) {
-	remove_action( 'send_headers', array( Pantheon_Cache::get_instance(), 'cache_add_headers' ) );
+	remove_action( 'send_headers', array( Pantheon_Cache::instance(), 'cache_add_headers' ) );
 }
 add_filter( 'wp_headers', function( $headers ){
 	$headers = array_merge( $headers, wp_get_nocache_headers() );
