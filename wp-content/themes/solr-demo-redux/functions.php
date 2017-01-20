@@ -12,6 +12,22 @@ function sdr_get_book_tax() {
 	return array( 'collection', 'subject' );
 }
 
+function sdr_get_template_part( $template, $vars = array() ) {
+	$full_path = get_template_directory() . '/parts/' . $template . '.php';
+	if ( ! file_exists( $full_path ) ) {
+		return '';
+	}
+
+	ob_start();
+	// @codingStandardsIgnoreStart
+	if ( ! empty( $vars ) ) {
+		extract( $vars );
+	}
+	// @codingStandardsIgnoreEnd
+	include $full_path;
+	return ob_get_clean();
+}
+
 add_action( 'init', function(){
 	register_post_type( 'book', array(
 		'labels' => array(

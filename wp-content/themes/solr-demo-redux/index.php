@@ -23,6 +23,8 @@
 
 				<?php endwhile; ?>
 
+				<?php echo sdr_get_template_part( 'pagination' ); ?>
+
 				</div>
 
 			</div>
