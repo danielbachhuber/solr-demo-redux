@@ -36,6 +36,11 @@ add_action( 'init', function(){
 	) );
 });
 
+add_filter( 'wp_headers', function( $headers ){
+	$headers = array_merge( $headers, wp_get_nocache_headers() );
+	return $headers;
+});
+
 add_action( 'wp_enqueue_scripts', function() {
 	$path = '/assets/css/style.css';
 	$mtime = filemtime( get_stylesheet_directory() . $path );
