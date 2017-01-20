@@ -86,3 +86,15 @@ add_action( 'pre_get_posts', function( $query ) {
 		$query->set( 'meta_query', $meta_query );
 	}
 });
+
+add_filter( 'posts_request', function( $request, $query ){
+	$query->sdr_start_time = microtime( true );
+	return $request;
+}, 1, 2 );
+
+add_filter( 'posts_results', function( $posts, $query ){
+	if ( isset( $query->sdr_start_time ) ) {
+		$query->sdr_total_time = microtime( true ) - $query->sdr_start_time;
+	}
+	return $posts;
+}, 10, 2 );

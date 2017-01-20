@@ -2,3 +2,11 @@
 @import "foundation";
 
 @include foundation-everything;
+
+.site-header {
+	padding-top: 4rem;
+	padding-bottom: 4rem;
+	.site-title {
+		font-size: 2.5rem;
+	}
+}

@@ -7,6 +7,11 @@
 			<div class="row">
 				<div class="columns medium-8 medium-centered">
 
+				<?php
+					if ( isset( $wp_query->sdr_total_time ) ) : ?>
+					<p><strong>Query time:</strong> <?php echo esc_html( round( $wp_query->sdr_total_time, 3 ) ); ?> seconds</p>
+				<?php endif; ?>
+
 				<?php while( have_posts() ) : the_post(); ?>
 
 					<article <?php post_class(); ?>
