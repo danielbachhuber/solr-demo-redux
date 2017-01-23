@@ -55,6 +55,17 @@ add_action( 'init', function(){
 if ( class_exists( 'Pantheon_Cache' ) ) {
 	remove_action( 'send_headers', array( Pantheon_Cache::instance(), 'cache_add_headers' ) );
 }
+
+add_action( 'init', function() {
+	if ( ! session_id() ) {
+		session_start();
+	}
+	if ( isset( $_POST['solr-enabled'] )
+		&& in_array( $_POST['solr-enabled'], array( 'on', 'off' ), true ) ) {
+		$_SESSION['solr-enabled'] = $_POST['solr-enabled'];
+	}
+});
+
 add_filter( 'wp_headers', function( $headers ){
 	$headers = array_merge( $headers, wp_get_nocache_headers() );
 	return $headers;
@@ -64,6 +75,7 @@ add_action( 'wp_enqueue_scripts', function() {
 	$path = '/assets/css/style.css';
 	$mtime = filemtime( get_stylesheet_directory() . $path );
 	wp_enqueue_style( 'solr-demo-redux', get_stylesheet_directory_uri() . $path, false, $mtime );
+	wp_enqueue_script( 'jquery' );
 });
 
 add_filter( 'query_vars', function( $query_vars ){

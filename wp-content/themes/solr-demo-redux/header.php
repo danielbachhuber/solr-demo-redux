@@ -15,10 +15,23 @@
 	<header class="site-header">
 		<div class="row">
 			<div class="columns medium-8 medium-centered">
-				<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo bloginfo( 'name' ); ?></a>
-				<?php if ( isset( $wp_query->sdr_total_time ) ) : ?>
-					<div><strong>Query time:</strong> <?php echo esc_html( round( $wp_query->sdr_total_time, 3 ) ); ?> seconds</div>
-				<?php endif; ?>
+				<div class="row">
+					<div class="columns medium-9">
+						<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo bloginfo( 'name' ); ?></a>
+						<?php if ( isset( $wp_query->sdr_total_time ) ) : ?>
+							<div><strong>Query time:</strong> <?php echo esc_html( round( $wp_query->sdr_total_time, 3 ) ); ?> seconds</div>
+						<?php endif; ?>
+					</div>
+					<div class="columns medium-3">
+						<div class="switch large">
+							<input class="switch-input" id="solr-enabled" type="checkbox" name="solr-enabled" <?php if ( isset( $_SESSION['solr-enabled'] ) && 'on' === $_SESSION['solr-enabled'] ) echo 'checked="checked"'; ?>>
+							<label class="switch-paddle" for="solr-enabled">
+								<span class="switch-active" aria-hidden="true">Solr Enabled</span>
+								<span class="switch-inactive" aria-hidden="true">Solr Disabled</span>
+							</label>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</header>

@@ -3912,3 +3912,9 @@ a.thumbnail {
   padding-bottom: 4rem; }
   .site-header .site-title {
     font-size: 2.5rem; }
+  .site-header .switch .switch-paddle {
+    width: 10rem; }
+  .site-header .switch input:checked ~ .switch-paddle::after {
+    left: 7.75rem; }
+  .site-header .switch .switch-inactive {
+    right: 5%; }

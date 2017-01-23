@@ -9,4 +9,15 @@
 	.site-title {
 		font-size: 2.5rem;
 	}
+	.switch {
+		.switch-paddle {
+			width: 10rem;
+		}
+		input:checked ~ .switch-paddle::after {
+			left: 7.75rem;
+		}
+		.switch-inactive {
+			right: 5%;
+		}
+	}
 }
