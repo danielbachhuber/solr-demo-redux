@@ -71,7 +71,7 @@ class SolrPower_CLI extends WP_CLI_Command {
 	/**
 	 * Index all posts for a site.
 	 *
-	 * @synopsis [--posts_per_page] [--post_type]
+	 * @synopsis [--offset=<offset>] [--posts_per_page] [--post_type]
 	 *
 	 * @param array $args
 	 *
