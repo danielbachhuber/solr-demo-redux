@@ -92,8 +92,7 @@ add_action( 'pre_get_posts', function( $query ) {
 	}
 	$query->set( 'post_type', 'book' );
 
-	if ( ! $query->is_singular()
-		&& isset( $_SESSION['solr-enabled'] )
+	if ( isset( $_SESSION['solr-enabled'] )
 		&& 'on' === $_SESSION['solr-enabled'] ) {
 		$query->set( 'solr_integrate', true );
 	}
