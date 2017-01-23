@@ -63,9 +63,8 @@ add_action( 'init', function() {
 	if ( ! session_id() ) {
 		session_start();
 	}
-	if ( isset( $_POST['solr-enabled'] )
-		&& in_array( $_POST['solr-enabled'], array( 'on', 'off' ), true ) ) {
-		$_SESSION['solr-enabled'] = $_POST['solr-enabled'];
+	if ( isset( $_POST['action'] ) && 'solr-enabled-form' === $_POST['action'] ) {
+		$_SESSION['solr-enabled'] = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
 	}
 });
 

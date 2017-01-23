@@ -59,11 +59,14 @@
 					</div>
 					<div class="columns medium-3">
 						<div class="switch large">
-							<input class="switch-input" id="solr-enabled" type="checkbox" name="solr-enabled" <?php if ( isset( $_SESSION['solr-enabled'] ) && 'on' === $_SESSION['solr-enabled'] ) echo 'checked="checked"'; ?>>
-							<label class="switch-paddle" for="solr-enabled">
-								<span class="switch-active" aria-hidden="true">Solr Enabled</span>
-								<span class="switch-inactive" aria-hidden="true">Solr Disabled</span>
-							</label>
+							<form method="POST">
+								<input name="action" value="solr-enabled-form" type="hidden" />
+								<input class="switch-input" id="solr-enabled" type="checkbox" name="solr-enabled" <?php if ( isset( $_SESSION['solr-enabled'] ) && 'on' === $_SESSION['solr-enabled'] ) echo 'checked="checked"'; ?>>
+								<label class="switch-paddle" for="solr-enabled">
+									<span class="switch-active" aria-hidden="true">Solr Enabled</span>
+									<span class="switch-inactive" aria-hidden="true">Solr Disabled</span>
+								</label>
+							</form>
 						</div>
 					</div>
 				</div>
