@@ -57,6 +57,9 @@ if ( class_exists( 'Pantheon_Cache' ) ) {
 }
 
 add_action( 'init', function() {
+	if ( is_admin() ) {
+		return;
+	}
 	if ( ! session_id() ) {
 		session_start();
 	}
