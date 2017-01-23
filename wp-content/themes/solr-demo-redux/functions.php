@@ -79,6 +79,7 @@ add_action( 'wp_enqueue_scripts', function() {
 	$mtime = filemtime( get_stylesheet_directory() . $path );
 	wp_enqueue_style( 'solr-demo-redux', get_stylesheet_directory_uri() . $path, false, $mtime );
 	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'chart-js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js' );
 });
 
 add_filter( 'query_vars', function( $query_vars ){
