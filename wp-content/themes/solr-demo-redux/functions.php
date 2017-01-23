@@ -66,7 +66,12 @@ add_action( 'init', function() {
 	if ( isset( $_POST['action'] ) && 'solr-enabled-form' === $_POST['action'] ) {
 		$_SESSION['solr-enabled'] = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
 	}
-});
+	if ( empty( $_SESSION['solr-enabled'] ) || 'off' === $_SESSION['solr-enabled'] ) {
+		if ( class_exists( 'SolrPower_WP_Query' ) ) {
+			remove_action( 'init', array( SolrPower_WP_Query::get_instance(), 'setup' ) );
+		}
+	}
+}, 9 ); // Before SolrPower_WP_Query runs its initialization
 
 add_filter( 'wp_headers', function( $headers ){
 	$headers = array_merge( $headers, wp_get_nocache_headers() );

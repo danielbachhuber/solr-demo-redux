@@ -2,6 +2,15 @@
 
 	<div class="site-content">
 
+		<div class="row">
+			<div class="columns medium-8 medium-centered">
+				<form method="GET">
+					<input type="text" name="s" value="<?php echo get_search_query(); ?>" />
+					<input type="submit" value="Search" class="button" />
+				</form>
+			</div>
+		</div>
+
 		<?php if ( have_posts() ) : ?>
 
 			<div class="row">
