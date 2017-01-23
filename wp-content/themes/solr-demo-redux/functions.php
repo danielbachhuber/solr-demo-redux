@@ -88,6 +88,13 @@ add_action( 'pre_get_posts', function( $query ) {
 		return;
 	}
 	$query->set( 'post_type', 'book' );
+
+	if ( ! $query->is_singular()
+		&& isset( $_SESSION['solr-enabled'] )
+		&& 'on' === $_SESSION['solr-enabled'] ) {
+		$query->set( 'solr_integrate', true );
+	}
+
 	$meta_query = array();
 	foreach( sdr_get_book_meta() as $key ) {
 		if ( $value = $query->get( $key ) ) {
