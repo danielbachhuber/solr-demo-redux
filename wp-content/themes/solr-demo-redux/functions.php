@@ -106,6 +106,12 @@ add_action( 'pre_get_posts', function( $query ) {
 			);
 		}
 	}
+	if ( isset( $query->query['year'] ) ) {
+		unset( $query->query['year'] );
+	}
+	if ( isset( $query->query_vars['year'] ) ) {
+		unset( $query->query_vars['year'] );
+	}
 	if ( ! empty( $meta_query ) ) {
 		$query->set( 'meta_query', $meta_query );
 	}
@@ -122,3 +128,10 @@ add_filter( 'posts_results', function( $posts, $query ){
 	}
 	return $posts;
 }, 10, 2 );
+
+add_filter( 'redirect_canonical', function( $redirect_url ){
+	if ( is_year() ) {
+		return false;
+	}
+	return $redirect_url;
+});
