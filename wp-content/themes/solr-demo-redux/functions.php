@@ -1,31 +1,10 @@
 <?php
 
+/**
+ * Load the book JSON importer WP-CLI command in WP-CLI context
+ */
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once __DIR__ . '/cli.php';
-}
-
-function sdr_get_book_meta() {
-	return array( 'creator', 'sponsor', 'publisher', 'year' );
-}
-
-function sdr_get_book_tax() {
-	return array( 'collection', 'subject' );
-}
-
-function sdr_get_template_part( $template, $vars = array() ) {
-	$full_path = get_template_directory() . '/parts/' . $template . '.php';
-	if ( ! file_exists( $full_path ) ) {
-		return '';
-	}
-
-	ob_start();
-	// @codingStandardsIgnoreStart
-	if ( ! empty( $vars ) ) {
-		extract( $vars );
-	}
-	// @codingStandardsIgnoreEnd
-	include $full_path;
-	return ob_get_clean();
 }
 
 add_action( 'init', function(){
@@ -140,3 +119,53 @@ add_filter( 'redirect_canonical', function( $redirect_url ){
 	}
 	return $redirect_url;
 });
+
+/**
+ * Get an array of post meta keys used as a part of the book data.
+ *
+ * Each of these keys represents an attribute that can be present in the
+ * original data set.
+ *
+ * Post meta is used when a key's value is expected to be pretty much anything.
+ *
+ * @return array
+ */
+function sdr_get_book_meta() {
+	return array( 'creator', 'sponsor', 'publisher', 'year' );
+}
+
+/**
+ * Get an array of custom taxonomy slugs used as a part of the book data.
+ *
+ * Each of these keys represents an attribute that can be present in the
+ * original data set.
+ *
+ * Custom taxonomies are used when a key's value is expected to be of a limited
+ * set of options.
+ *
+ * @return array
+ */
+function sdr_get_book_tax() {
+	return array( 'collection', 'subject' );
+}
+
+/**
+ * Get a template part rendered with an optional set of template variables.
+ *
+ * @return string
+ */
+function sdr_get_template_part( $template, $vars = array() ) {
+	$full_path = get_template_directory() . '/parts/' . $template . '.php';
+	if ( ! file_exists( $full_path ) ) {
+		return '';
+	}
+
+	ob_start();
+	// @codingStandardsIgnoreStart
+	if ( ! empty( $vars ) ) {
+		extract( $vars );
+	}
+	// @codingStandardsIgnoreEnd
+	include $full_path;
+	return ob_get_clean();
+}
