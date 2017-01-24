@@ -7,6 +7,13 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once __DIR__ . '/cli.php';
 }
 
+/**
+ * On the 'init' hook:
+ *
+ * - Register the 'book' custom post type.
+ * - Register the 'collection' and 'subject' custom taxonomies.
+ *  - Show an admin column for each taxonomy so the data is easier to reference.
+ */
 add_action( 'init', function(){
 	register_post_type( 'book', array(
 		'labels' => array(
@@ -31,20 +38,38 @@ add_action( 'init', function(){
 	) );
 });
 
+/**
+ * Disable Pantheon_Cache::cache_add_headers()
+ *
+ * Pantheon normally caches the site in Varnish for logged-out visitors, but
+ * we want to make sure it's fully disabled.
+ */
 if ( class_exists( 'Pantheon_Cache' ) ) {
 	remove_action( 'send_headers', array( Pantheon_Cache::instance(), 'cache_add_headers' ) );
 }
 
+/**
+ * Early on the 'init' hook:
+ *
+ * - Start a PHP session if one isn't already started. PHP sessions are used
+ * to track whether Solr should be enabled for a given request.
+ * - Handle a POST request to enable or disable Solr for a session.
+ * - If Solr is disabled, ensure Solr Power's automatic query filtering is disabled.
+ */
 add_action( 'init', function() {
+	// Bail early in the admin, because we don't want any of this code to apply.
 	if ( is_admin() ) {
 		return;
 	}
+	// Start a PHP session if one isn't already started.
 	if ( ! session_id() ) {
 		session_start();
 	}
+	// Handle a POST request to enable or disable Solr for a session.
 	if ( isset( $_POST['action'] ) && 'solr-enabled-form' === $_POST['action'] ) {
 		$_SESSION['solr-enabled'] = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
 	}
+	// If Solr is disabled, ensure Solr Power's automatic query filtering is disabled.
 	if ( empty( $_SESSION['solr-enabled'] ) || 'off' === $_SESSION['solr-enabled'] ) {
 		if ( class_exists( 'SolrPower_WP_Query' ) ) {
 			remove_action( 'init', array( SolrPower_WP_Query::get_instance(), 'setup' ) );
@@ -52,35 +77,63 @@ add_action( 'init', function() {
 	}
 }, 9 ); // Before SolrPower_WP_Query runs its initialization
 
+/**
+ * Send the nocache header on every page request
+ *
+ * Doing so helps to ensure Pantheon's Varnish full page cache is bypassed.
+ */
 add_filter( 'wp_headers', function( $headers ){
 	$headers = array_merge( $headers, wp_get_nocache_headers() );
 	return $headers;
 }, 100 );
 
+/**
+ * Enqueue scripts and styles specific to the frontend of the site
+ */
 add_action( 'wp_enqueue_scripts', function() {
 	$path = '/assets/css/style.css';
+	// Automatically bust the stylesheet cache by appending the file modification time
 	$mtime = filemtime( get_stylesheet_directory() . $path );
 	wp_enqueue_style( 'solr-demo-redux', get_stylesheet_directory_uri() . $path, false, $mtime );
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'chart-js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js' );
 });
 
+/**
+ * Register our post meta keys as query variables
+ *
+ * Registering query variables tells WordPress that URLs like /?creator=Google
+ * are safe to pass to WP_Query.
+ */
 add_filter( 'query_vars', function( $query_vars ){
 	$query_vars = array_merge( $query_vars, sdr_get_book_meta() );
 	return $query_vars;
 });
 
+/**
+ * Modify the main WP_Query on the frontend
+ *
+ * The 'pre_get_posts' action permits modification of the WP_Query object
+ * before query parameters are transformed to a SQL query.
+ */
 add_action( 'pre_get_posts', function( $query ) {
 	if ( is_admin() ) {
 		return;
 	}
+
+	// Only ever query against our 'book' custom post type.
+	// Posts and pages aren't used on this site.
 	$query->set( 'post_type', 'book' );
 
+	// If the user has switched their session from MySQL to Solr,
+	// ensure Solr Power is enabled for the query
 	if ( isset( $_SESSION['solr-enabled'] )
 		&& 'on' === $_SESSION['solr-enabled'] ) {
 		$query->set( 'solr_integrate', true );
 	}
 
+	// Inspect query params to see if any post meta keys are present
+	// If post meta keys are present, they'll need to be handled as a meta query.
 	$meta_query = array();
 	foreach( sdr_get_book_meta() as $key ) {
 		if ( $value = $query->get( $key ) ) {
@@ -90,22 +143,31 @@ add_action( 'pre_get_posts', function( $query ) {
 			);
 		}
 	}
+	if ( ! empty( $meta_query ) ) {
+		$query->set( 'meta_query', $meta_query );
+	}
+
+	// 'year' is a potential query parameter we want to make sure WordPress
+	// handles as a meta query, not a date query
 	if ( isset( $query->query['year'] ) ) {
 		unset( $query->query['year'] );
 	}
 	if ( isset( $query->query_vars['year'] ) ) {
 		unset( $query->query_vars['year'] );
 	}
-	if ( ! empty( $meta_query ) ) {
-		$query->set( 'meta_query', $meta_query );
-	}
 });
 
+/**
+ * Start timer for WP_Query's fetching of data
+ */
 add_filter( 'posts_request', function( $request, $query ){
 	$query->sdr_start_time = microtime( true );
 	return $request;
 }, 1, 2 );
 
+/**
+ * End timer for WP_Query's fetching of data
+ */
 add_filter( 'posts_results', function( $posts, $query ){
 	if ( isset( $query->sdr_start_time ) ) {
 		$query->sdr_total_time = microtime( true ) - $query->sdr_start_time;
@@ -113,6 +175,10 @@ add_filter( 'posts_results', function( $posts, $query ){
 	return $posts;
 }, 10, 2 );
 
+/**
+ * Prevent WordPress' canonical redirect feature from redirecting
+ * ?year=2014 to /2014/. We need the former for our query parsing to work.
+ */
 add_filter( 'redirect_canonical', function( $redirect_url ){
 	if ( is_year() ) {
 		return false;
