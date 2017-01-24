@@ -1,13 +1,6 @@
 <?php
 
 /**
- * Load the book JSON importer WP-CLI command in WP-CLI context
- */
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once __DIR__ . '/cli.php';
-}
-
-/**
  * On the 'init' hook:
  *
  * - Register the 'book' custom post type.
@@ -234,4 +227,11 @@ function sdr_get_template_part( $template, $vars = array() ) {
 	// @codingStandardsIgnoreEnd
 	include $full_path;
 	return ob_get_clean();
+}
+
+/**
+ * Load the book JSON importer WP-CLI command in WP-CLI context
+ */
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once __DIR__ . '/cli.php';
 }
