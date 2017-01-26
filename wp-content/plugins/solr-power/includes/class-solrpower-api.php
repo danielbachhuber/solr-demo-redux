@@ -27,6 +27,11 @@ class SolrPower_Api {
 	public $last_error;
 
 	/**
+	 * @var bool Ping results from Solr.
+	 */
+	public $ping = false;
+
+	/**
 	 * Grab instance of object.
 	 * @return SolrPower_Api
 	 */
@@ -40,6 +45,7 @@ class SolrPower_Api {
 
 	function __construct() {
 		add_action( 'admin_notices', array( $this, 'check_for_schema' ) );
+		add_action( 'init', array( $this, 'ping_server' ) );
 	}
 
 	function submit_schema() {
@@ -51,7 +57,7 @@ class SolrPower_Api {
 
 		// Let's check for a custom Schema.xml. It MUST be located in
 		// wp-content/uploads/solr-for-wordpress-on-pantheon/schema.xml
-		if ( is_file( realpath( ABSPATH ) . '/' . $_ENV['FILEMOUNT'] . '/solr-for-wordpress-on-pantheon/schema.xml' ) ) {
+		if ( ! empty( $_ENV['FILEMOUNT'] ) && is_file( realpath( ABSPATH ) . '/' . $_ENV['FILEMOUNT'] . '/solr-for-wordpress-on-pantheon/schema.xml' ) ) {
 			$schema = realpath( ABSPATH ) . '/' . $_ENV['FILEMOUNT'] . '/solr-for-wordpress-on-pantheon/schema.xml';
 		} else {
 			$schema = SOLR_POWER_PATH . '/schema.xml';
@@ -136,7 +142,7 @@ class SolrPower_Api {
 		try {
 			$ping            = $solr->ping( $solr->createPing() );
 			$this->last_code = 200;
-
+			$this->ping = true;
 			return true;
 		} catch ( Solarium\Exception\HttpException $e ) {
 
@@ -506,7 +512,7 @@ class SolrPower_Api {
 		$ping = $this->ping_server();
 
 		return array(
-			'ping_status' => $ping ? 'successful' : 'failed',
+			'ping_status' => $ping,
 			'ip_address'  => getenv( 'PANTHEON_INDEX_HOST' ),
 			'port'        => getenv( 'PANTHEON_INDEX_PORT' ),
 			'path'        => $this->compute_path(),
