@@ -57,6 +57,7 @@ if ( class_exists( 'Pantheon_Cache' ) ) {
  * - If Solr is disabled, ensure Solr Power's automatic query filtering is disabled.
  */
 add_action( 'init', function() {
+	global $wpdb;
 	// Bail early in the admin, because we don't want any of this code to apply.
 	if ( is_admin() ) {
 		return;
@@ -68,6 +69,12 @@ add_action( 'init', function() {
 	// Handle a POST request to enable or disable Solr for a session.
 	if ( isset( $_POST['action'] ) && 'solr-enabled-form' === $_POST['action'] ) {
 		$_SESSION['solr-enabled'] = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
+	}
+	$env = getenv( 'PANTHEON_ENVIRONMENT' );
+	if ( $env && 'local' !== $env && ! isset( $_SESSION['query-cache-disabled'] ) ) {
+		$wpdb->query( 'SET GLOBAL query_cache_size=0;' );
+		$wpdb->query( 'SET GLOBAL query_cache_type=OFF;' );
+		$_SESSION['query-cache-disabled'] = true;
 	}
 	// If Solr is disabled, ensure Solr Power's automatic query filtering is disabled.
 	if ( empty( $_SESSION['solr-enabled'] ) || 'off' === $_SESSION['solr-enabled'] ) {
