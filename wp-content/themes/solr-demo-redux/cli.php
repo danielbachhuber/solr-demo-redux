@@ -99,7 +99,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 			'Country'   => 'country',
 			'Poster'    => 'poster',
 		);
-		$added_fields = 0;
+		$added_fields = array();
 		foreach( $fields as $rf => $pf ) {
 			if ( 'N/A' === $data[ $rf ] ) {
 				continue;
@@ -124,9 +124,10 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 					update_post_meta( $post_id, $pf, $data[ $rf ] );
 					break;
 			}
-			$added_fields++;
+			$added_fields[] = $pf;
 		}
-		WP_CLI::log( "Enriched post '{$title}' with {$added_fields} fields." );
+		$added_fields = $added_fields ? implode( ', ', $added_fields ) : 'None';
+		WP_CLI::log( "Enriched post '{$title}' with fields: {$added_fields}" );
 		update_post_meta( $post_id, 'enriched', true );
 	};
 
