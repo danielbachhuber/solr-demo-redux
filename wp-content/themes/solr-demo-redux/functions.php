@@ -68,7 +68,17 @@ add_action( 'init', function() {
 	}
 	// Handle a POST request to enable or disable Solr for a session.
 	if ( isset( $_POST['action'] ) && 'solr-enabled-form' === $_POST['action'] ) {
-		$_SESSION['solr-enabled'] = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
+		$error_message = false;
+		$solr_enabled = isset( $_POST['solr-enabled'] ) && 'on' === $_POST['solr-enabled'] ? 'on' : 'off';
+		if ( ! class_exists( 'SolrPower_Api' ) ) {
+			$error_message = 'Solr Power is not installed / activated.';
+		} elseif ( ! SolrPower_Api::get_instance()->ping_server() ) {
+			$error_message = 'Cannot ping Solr server.';
+		}
+		if ( $error_message && 'on' === $solr_enabled ) {
+			wp_die( $error_message );
+		}
+		$_SESSION['solr-enabled'] = $solr_enabled;
 	}
 	$env = getenv( 'PANTHEON_ENVIRONMENT' );
 	if ( $env && 'local' !== $env && ! isset( $_SESSION['query-cache-disabled'] ) ) {
