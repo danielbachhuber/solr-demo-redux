@@ -145,7 +145,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 				$enrich_movie( $post->ID );
 			}
 			$paged++;
-			wp_clear_object_cache();
+			WP_CLI\Utils\wp_clear_object_cache();
 		} while( count( $query->posts ) );
 	} else {
 		$query = new WP_Query( array(
