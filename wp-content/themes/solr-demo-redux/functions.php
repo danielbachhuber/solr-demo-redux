@@ -3,29 +3,36 @@
 /**
  * On the 'init' hook:
  *
- * - Register the 'book' custom post type.
- * - Register the 'collection' and 'subject' custom taxonomies.
+ * - Register the 'movie' custom post type.
+ * - Register the 'genre' and 'language' custom taxonomies.
  *  - Show an admin column for each taxonomy so the data is easier to reference.
  */
 add_action( 'init', function(){
-	register_post_type( 'book', array(
+	register_post_type( 'movie', array(
 		'labels' => array(
-			'name'           => 'Books',
-			'singular_name'  => 'Book',
+			'name'           => 'Movies',
+			'singular_name'  => 'Movie',
 		),
 		'public' => true,
 	) );
-	register_taxonomy( 'collection', array( 'book' ), array(
+	register_taxonomy( 'genre', array( 'movie' ), array(
 		'labels' => array(
-			'name'           => 'Collections',
-			'singular_name'  => 'Collection',
+			'name'           => 'Genres',
+			'singular_name'  => 'Genre',
 		),
 		'show_admin_column' => true,
 	) );
-	register_taxonomy( 'subject', array( 'book' ), array(
+	register_taxonomy( 'language', array( 'movie' ), array(
 		'labels' => array(
-			'name'           => 'Subjects',
-			'singular_name'  => 'Subject',
+			'name'           => 'Languages',
+			'singular_name'  => 'Language',
+		),
+		'show_admin_column' => true,
+	) );
+	register_taxonomy( 'country', array( 'movie' ), array(
+		'labels' => array(
+			'name'           => 'Countries',
+			'singular_name'  => 'Country',
 		),
 		'show_admin_column' => true,
 	) );
@@ -99,7 +106,7 @@ add_action( 'wp_enqueue_scripts', function() {
  * are safe to pass to WP_Query.
  */
 add_filter( 'query_vars', function( $query_vars ){
-	$query_vars = array_merge( $query_vars, sdr_get_book_meta() );
+	$query_vars = array_merge( $query_vars, sdr_get_movie_meta() );
 	return $query_vars;
 });
 
@@ -114,9 +121,9 @@ add_action( 'pre_get_posts', function( $query ) {
 		return;
 	}
 
-	// Only ever query against our 'book' custom post type.
+	// Only ever query against our 'movie' custom post type.
 	// Posts and pages aren't used on this site.
-	$query->set( 'post_type', 'book' );
+	$query->set( 'post_type', 'movie' );
 
 	// If the user has switched their session from MySQL to Solr,
 	// ensure Solr Power is enabled for the query
@@ -128,7 +135,7 @@ add_action( 'pre_get_posts', function( $query ) {
 	// Inspect query params to see if any post meta keys are present
 	// If post meta keys are present, they'll need to be handled as a meta query.
 	$meta_query = array();
-	foreach( sdr_get_book_meta() as $key ) {
+	foreach( sdr_get_movie_meta() as $key ) {
 		if ( $value = $query->get( $key ) ) {
 			$meta_query[] = array(
 				'key'     => $key,
@@ -180,7 +187,7 @@ add_filter( 'redirect_canonical', function( $redirect_url ){
 });
 
 /**
- * Get an array of post meta keys used as a part of the book data.
+ * Get an array of post meta keys used as a part of the movie data.
  *
  * Each of these keys represents an attribute that can be present in the
  * original data set.
@@ -189,12 +196,12 @@ add_filter( 'redirect_canonical', function( $redirect_url ){
  *
  * @return array
  */
-function sdr_get_book_meta() {
-	return array( 'creator', 'sponsor', 'publisher', 'year' );
+function sdr_get_movie_meta() {
+	return array( 'year', 'rating', 'runtime', 'director', 'writer', 'actors' );
 }
 
 /**
- * Get an array of custom taxonomy slugs used as a part of the book data.
+ * Get an array of custom taxonomy slugs used as a part of the movie data.
  *
  * Each of these keys represents an attribute that can be present in the
  * original data set.
@@ -204,8 +211,8 @@ function sdr_get_book_meta() {
  *
  * @return array
  */
-function sdr_get_book_tax() {
-	return array( 'collection', 'subject' );
+function sdr_get_movie_tax() {
+	return array( 'genre', 'language', 'country' );
 }
 
 /**
@@ -230,7 +237,7 @@ function sdr_get_template_part( $template, $vars = array() ) {
 }
 
 /**
- * Load the book JSON importer WP-CLI command in WP-CLI context
+ * Load the movie JSON importer WP-CLI command in WP-CLI context
  */
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once __DIR__ . '/cli.php';

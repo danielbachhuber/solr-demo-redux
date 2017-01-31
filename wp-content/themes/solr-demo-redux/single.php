@@ -18,13 +18,21 @@
 						</header>
 
 						<div class="entry-meta">
-							<?php foreach( sdr_get_book_meta() as $k ) :
-								if ( ! empty( $post->$k ) ) :
-									$filter_link = add_query_arg( $k, rawurlencode( $post->$k ), home_url() ); ?>
-								<p><strong><?php echo ucwords( $k ); ?>:</strong> <a href="<?php echo esc_url( $filter_link ); ?>"><?php echo $post->$k; ?></a></p>
-								<?php endif; ?>
+							<?php foreach( sdr_get_movie_meta() as $k ) :
+								$values = get_post_meta( $post->ID, $k );
+								if ( empty( $values ) ) {
+									continue;
+								} ?>
+								<p><strong><?php echo ucwords( $k ); ?>:</strong>
+									<?php foreach( $values as $i => $value ) :
+										$filter_link = add_query_arg( $k, rawurlencode( $value ), home_url() );
+										if ( $i !== 0 ) {
+											echo ', ';
+										}
+									?><a href="<?php echo esc_url( $filter_link ); ?>"><?php echo esc_html( $value ); ?></a><?php endforeach; ?>
+								</p>
 							<?php endforeach;
-								foreach( sdr_get_book_tax() as $tax ) :
+								foreach( sdr_get_movie_tax() as $tax ) :
 									if ( ! get_the_terms( $post, $tax ) ) {
 										continue;
 									} ?>
