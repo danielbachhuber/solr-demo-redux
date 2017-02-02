@@ -52,6 +52,9 @@ WP_CLI::add_command( 'import-movies', function( $args ){
  *
  * [--force]
  * : Forcefully enrich movies that have already been enriched.
+ *
+ * [--paged=<paged>]
+ * : Start enrichment at a specific point of pagination.
  */
 WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 
@@ -60,6 +63,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 		WP_CLI::error( "Please specify one or more post ids, or use --all" );
 	}
 	$force = WP_CLI\Utils\get_flag_value( $assoc_args, 'force' );
+	$paged = WP_CLI\Utils\get_flag_value( $assoc_args, 'paged', 1 );
 
 	$enrich_movie = function( $post_id ) use ( $force ) {
 		$title = html_entity_decode( get_the_title( $post_id ) );
@@ -137,7 +141,6 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 	};
 
 	if ( $all ) {
-		$paged = 1;
 		do {
 			$query = new WP_Query( array(
 				'orderby'        => 'ID',
