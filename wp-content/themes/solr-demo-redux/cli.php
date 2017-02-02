@@ -57,7 +57,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 	$force = WP_CLI\Utils\get_flag_value( $assoc_args, 'force' );
 
 	$enrich_movie = function( $post_id ) use ( $force ) {
-		$title = get_the_title( $post_id );
+		$title = html_entity_decode( get_the_title( $post_id ) );
 		$post_mention = "'{$title}' ({$post_id})";
 		if ( get_post_meta( $post_id, 'enriched', true ) && ! $force ) {
 			WP_CLI::log( "{$post_mention} is already enriched." );
