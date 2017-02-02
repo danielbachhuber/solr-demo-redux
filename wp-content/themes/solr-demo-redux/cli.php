@@ -79,7 +79,9 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 		if ( $year = get_post_meta( $post_id, 'year', true ) ) {
 			$request_args['year'] = $year;
 		}
+		$start_time = microtime( true );
 		$response = wp_remote_get( add_query_arg( $request_args, 'http://www.omdbapi.com/' ) );
+		$fetch_time = microtime( true ) - $start_time;
 		if ( is_wp_error( $response ) ) {
 			WP_CLI::warning( $response->get_error_message() );
 			return;
@@ -109,6 +111,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 			'Poster'    => 'poster',
 		);
 		$added_fields = array();
+		$start_time = microtime( true );
 		foreach( $fields as $rf => $pf ) {
 			if ( 'N/A' === $data[ $rf ] ) {
 				continue;
@@ -135,8 +138,11 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 			}
 			$added_fields[] = $pf;
 		}
+		$insert_time = microtime( true ) - $start_time;
+		$insert_time = round( $insert_time, 3 );
+		$fetch_time = round( $fetch_time, 3 );
 		$added_fields = $added_fields ? implode( ', ', $added_fields ) : 'None';
-		WP_CLI::log( "Enriched post '{$title}' with fields: {$added_fields}" );
+		WP_CLI::log( "Enriched {$post_mention} in {$fetch_time}s fetch, {$insert_time}s insert with fields: {$added_fields}" );
 		update_post_meta( $post_id, 'enriched', true );
 	};
 
@@ -149,6 +155,9 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 				'posts_per_page' => 200,
 				'paged'          => $paged,
 			) );
+			WP_CLI::log( '' );
+			WP_CLI::log( 'Starting page ' . $paged );
+			WP_CLI::log( '' );
 			foreach( $query->posts as $post ) {
 				$enrich_movie( $post->ID );
 			}
