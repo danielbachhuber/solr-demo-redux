@@ -8,7 +8,10 @@ WP_CLI::add_command( 'import-movies', function( $args ){
 	global $wpdb;
 
 	$limit = 100;
-	$offset = 0;
+	$offset = get_option( 'sdr_import_offset', 0 );
+	if ( $offset ) {
+		WP_CLI::log( "Restarting import at offset {$offset}" );
+	}
 	$count = $wpdb->get_var( "SELECT COUNT(id) FROM plots" );
 	$message = 'Importing plots';
 	$progress = WP_CLI\Utils\make_progress_bar( $message, $count );
@@ -31,8 +34,10 @@ WP_CLI::add_command( 'import-movies', function( $args ){
 			$progress->tick();
 		}
 		$offset += $limit;
+		update_option( 'sdr_import_offset', $offset );
 	} while( count( $results ) );
 	$progress->finish();
+	delete_option( 'sdr_import_offset' );
 	WP_CLI::success( "Import complete." );
 });
 
