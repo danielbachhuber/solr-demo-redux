@@ -142,6 +142,12 @@ add_action( 'pre_get_posts', function( $query ) {
 	// Posts and pages aren't used on this site.
 	$query->set( 'post_type', 'movie' );
 
+	// On the homepage, sort by title
+	if ( $query->is_home() ) {
+		$query->set( 'order', 'ASC' );
+		$query->set( 'orderby', 'title' );
+	}
+
 	// If the user has switched their session from MySQL to Solr,
 	// ensure Solr Power is enabled for the query
 	if ( isset( $_SESSION['solr-enabled'] )
