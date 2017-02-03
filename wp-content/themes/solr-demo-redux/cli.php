@@ -117,12 +117,12 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 				continue;
 			}
 			switch ( $pf ) {
-				case 'genre':
-				case 'language':
-				case 'country':
-					$terms = explode( ', ', $data[ $rf ] );
-					wp_set_post_terms( $post_id, $terms, $pf );
-					break;
+				// case 'genre':
+				// case 'language':
+				// case 'country':
+				// 	$terms = explode( ', ', $data[ $rf ] );
+				// 	wp_set_post_terms( $post_id, $terms, $pf );
+				// 	break;
 				case 'director':
 				case 'writer':
 				case 'actors':
