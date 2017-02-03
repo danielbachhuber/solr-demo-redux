@@ -196,7 +196,7 @@ WP_CLI::add_command( 'prune-unenriched', function(){
 			WP_CLI::log( "{$post_mention} is enriched, skipping." );
 		} else {
 			WP_CLI::log( "Deleting {$post_mention}, which is missing enrichment." );
-			// wp_delete_post( $post_id, true );
+			wp_delete_post( $post_id, true );
 			$unenriched++;
 		}
 		$total++;
