@@ -182,32 +182,28 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
  */
 WP_CLI::add_command( 'prune-unenriched', function(){
 	$unenriched = $total = 0;
-	$paged = 1;
-	do {
-		$query = new WP_Query( array(
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
-			'post_type'      => 'movie',
-			'posts_per_page' => 200,
-			'paged'          => $paged,
-		) );
-		WP_CLI::log( '' );
-		WP_CLI::log( 'Starting page ' . $paged );
-		WP_CLI::log( '' );
-		foreach( $query->posts as $post ) {
-			$title = html_entity_decode( get_the_title( $post->ID ) );
-			$post_mention = "'{$title}' ({$post->ID})";
-			if ( get_post_meta( $post->ID, 'enriched', true ) ) {
-				WP_CLI::log( "{$post_mention} is enriched, skipping." );
-			} else {
-				WP_CLI::log( "Deleting {$post_mention}, which is missing enrichment." );
-				wp_delete_post( $post->ID, true );
-				$unenriched++;
-			}
-			$total++;
+	$query = new WP_Query( array(
+		'orderby'        => 'ID',
+		'order'          => 'ASC',
+		'post_type'      => 'movie',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	) );
+	foreach( $query->posts as $post_id ) {
+		$title = html_entity_decode( get_the_title( $post_id ) );
+		$post_mention = "'{$title}' ({$post_id})";
+		if ( get_post_meta( $post_id, 'enriched', true ) ) {
+			WP_CLI::log( "{$post_mention} is enriched, skipping." );
+		} else {
+			WP_CLI::log( "Deleting {$post_mention}, which is missing enrichment." );
+			// wp_delete_post( $post_id, true );
+			$unenriched++;
 		}
-		$paged++;
-		WP_CLI\Utils\wp_clear_object_cache();
-	} while( count( $query->posts ) );
+		$total++;
+		if ( $total % 200 === 0 ) {
+			WP_CLI\Utils\wp_clear_object_cache();
+		}
+	}
 	WP_CLI::success( "Pruned {$unenriched} unenriched movies of {$total} movies" );
 });
+
