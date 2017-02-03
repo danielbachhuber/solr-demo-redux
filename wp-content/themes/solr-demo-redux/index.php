@@ -16,21 +16,41 @@
 			<div class="row">
 				<div class="columns medium-8 medium-centered">
 
-				<?php while( have_posts() ) : the_post(); ?>
+				<div class="row small-up-1 medium-up-3">
 
-					<article <?php post_class(); ?>
+					<?php while( have_posts() ) : the_post(); ?>
 
-						<header class="entry-header">
-							<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-						</header>
+						<div class="column">
 
-						<div class="entry-content">
-							<?php the_excerpt(); ?>
+							<article <?php post_class(); ?>
+
+								<header class="entry-header">
+									<h4><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+								</header>
+
+								<div class="entry-meta">
+									<p>
+									<?php
+										$fields = array();
+										if ( $year = get_post_meta( get_the_ID(), 'year', true ) ) {
+											$fields['Year'] = '<a href="' . add_query_arg( 'year', $year, home_url( '/' ) ) . '">' . esc_html( $year ) . '</a>';
+										}
+										if ( $rating = get_post_meta( get_the_ID(), 'rating', true ) ) {
+											$fields['Rating'] = '<a href="' . add_query_arg( 'rating', $year, home_url( '/' ) ) . '">' . esc_html( $rating ) . '</a>';
+										}
+									foreach( $fields as $label => $link ) {
+										echo '<strong>' . $label . ': </strong> ' . $link . ' ';
+									} ?>
+									</p>
+								</div>
+
+							</article>
+
 						</div>
 
-					</article>
+					<?php endwhile; ?>
 
-				<?php endwhile; ?>
+				</div>
 
 				<?php echo sdr_get_template_part( 'pagination' ); ?>
 

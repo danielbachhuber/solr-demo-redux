@@ -148,6 +148,10 @@ add_action( 'pre_get_posts', function( $query ) {
 		$query->set( 'orderby', 'title' );
 	}
 
+	if ( ! $query->is_singular() ) {
+		$query->set( 'posts_per_page', 18 );
+	}
+
 	// If the user has switched their session from MySQL to Solr,
 	// ensure Solr Power is enabled for the query
 	if ( isset( $_SESSION['solr-enabled'] )
