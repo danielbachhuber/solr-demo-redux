@@ -239,7 +239,7 @@ WP_CLI::add_command( 'prune-naughty', function(){
 			$is_naughty = true;
 		}
 
-		$ban_words = array( 'nigger', 'penis', 'erotic', 'slut', 'nigger' );
+		$ban_words = array( 'nigger', 'penis', 'erotic', 'slut', 'nigger', 'boob' );
 		foreach( $ban_words as $ban_word ) {
 			if ( false !== stripos( $content, $ban_word ) ) {
 				$is_naughty = true;
