@@ -204,6 +204,19 @@ add_filter( 'redirect_canonical', function( $redirect_url ){
 });
 
 /**
+ * Ensure post meta are always included in indexing options
+ */
+$sdr_filter_option_index_meta = function( $option ) {
+	if ( ! is_array( $option ) ) {
+		$option = array();
+	}
+	$option['s4wp_index_custom_fields'] = sdr_get_movie_meta();
+	return $option;
+};
+add_filter( 'default_option_plugin_s4wp_settings', $sdr_filter_option_index_meta );
+add_filter( 'option_plugin_s4wp_settings', $sdr_filter_option_index_meta );
+
+/**
  * Get an array of post meta keys used as a part of the movie data.
  *
  * Each of these keys represents an attribute that can be present in the
