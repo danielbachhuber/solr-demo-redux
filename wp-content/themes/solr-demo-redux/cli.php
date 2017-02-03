@@ -207,3 +207,60 @@ WP_CLI::add_command( 'prune-unenriched', function(){
 	WP_CLI::success( "Pruned {$unenriched} unenriched movies of {$total} movies" );
 });
 
+/**
+ * Prune posts that are naughty
+ */
+WP_CLI::add_command( 'prune-naughty', function(){
+	$naughty = $total = 0;
+	$query = new WP_Query( array(
+		'orderby'        => 'ID',
+		'order'          => 'ASC',
+		'post_type'      => 'movie',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	) );
+	foreach( $query->posts as $post_id ) {
+		$title = html_entity_decode( get_the_title( $post_id ) );
+		$content= get_post_field( 'post_content', $post_id );
+		$post_mention = "'{$title}' ({$post_id})";
+		$is_naughty = false;
+
+		$rating = get_post_meta( $post_id, 'rating', true );
+		if ( in_array( $rating, array( 'X' ), true ) ) {
+			$is_naughty = true;
+		}
+
+		$genre = get_post_meta( $post_id, 'genre', true );
+		if ( in_array( $genre, array( 'adult', 'Adult' ), true ) ) {
+			$is_naughty = true;
+		}
+
+		if ( has_term( 'adult', 'genre', $post_id ) ) {
+			$is_naughty = true;
+		}
+
+		$ban_words = array( 'nigger', 'penis', 'erotic', 'slut', 'nigger' );
+		foreach( $ban_words as $ban_word ) {
+			if ( false !== stripos( $content, $ban_word ) ) {
+				$is_naughty = true;
+			}
+			if ( false !== stripos( $title, $ban_word ) ) {
+				$is_naughty = true;
+			}
+		}
+
+		if ( $is_naughty ) {
+			WP_CLI::log( "Deleting {$post_mention}, which is naughty." );
+			// wp_delete_post( $post_id, true );
+			$naughty++;
+		} else {
+			WP_CLI::log( "{$post_mention} isn't naughty, skipping." );
+		}
+		$total++;
+		if ( $total % 200 === 0 ) {
+			WP_CLI\Utils\wp_clear_object_cache();
+		}
+	}
+	WP_CLI::success( "Pruned {$naughty} naughty movies of {$total} movies" );
+});
+
