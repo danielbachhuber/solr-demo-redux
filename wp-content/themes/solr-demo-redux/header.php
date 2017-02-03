@@ -34,7 +34,7 @@
 								foreach( $query_times as $query_time ) {
 									$query_time_data[] = $query_time['query_time'];
 									if ( 'on' === $query_time['solr_enabled'] ) {
-										$background_color_data[] = '#1779ba';
+										$background_color_data[] = '#88BBD5';
 									} else {
 										$background_color_data[] = '#E5E5E5';
 									}
