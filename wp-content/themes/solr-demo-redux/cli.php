@@ -176,3 +176,37 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
 	}
 	WP_CLI::success( "Movie enrichment complete." );
 });
+
+/**
+ * Prune posts that aren't enriched
+ */
+WP_CLI::add_command( 'prune-unenriched', function(){
+	$unenriched = $total = 0;
+	do {
+		$query = new WP_Query( array(
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'post_type'      => 'movie',
+			'posts_per_page' => 200,
+			'paged'          => $paged,
+		) );
+		WP_CLI::log( '' );
+		WP_CLI::log( 'Starting page ' . $paged );
+		WP_CLI::log( '' );
+		foreach( $query->posts as $post ) {
+			$title = html_entity_decode( get_the_title( $post->ID ) );
+			$post_mention = "'{$title}' ({$post->ID})";
+			if ( get_post_meta( $post->ID, 'enriched', true ) ) {
+				WP_CLI::log( "{$post_mention} is enriched, skipping." );
+			} else {
+				WP_CLI::log( "Deleting {$post_mention}, which is missing enrichment." );
+				wp_delete_post( $post->ID, true );
+				$unenriched++;
+			}
+			$total++;
+		}
+		$paged++;
+		WP_CLI\Utils\wp_clear_object_cache();
+	} while( count( $query->posts ) );
+	WP_CLI::success( "Pruned {$unenriched} unenriched movies of {$total} movies" );
+});
