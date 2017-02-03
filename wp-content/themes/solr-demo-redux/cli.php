@@ -251,7 +251,7 @@ WP_CLI::add_command( 'prune-naughty', function(){
 
 		if ( $is_naughty ) {
 			WP_CLI::log( "Deleting {$post_mention}, which is naughty." );
-			// wp_delete_post( $post_id, true );
+			wp_delete_post( $post_id, true );
 			$naughty++;
 		} else {
 			WP_CLI::log( "{$post_mention} isn't naughty, skipping." );
