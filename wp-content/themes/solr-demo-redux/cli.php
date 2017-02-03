@@ -182,6 +182,7 @@ WP_CLI::add_command( 'enrich-movies', function( $args, $assoc_args ){
  */
 WP_CLI::add_command( 'prune-unenriched', function(){
 	$unenriched = $total = 0;
+	$paged = 1;
 	do {
 		$query = new WP_Query( array(
 			'orderby'        => 'ID',
