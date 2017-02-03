@@ -30,6 +30,15 @@
 								);
 								$query_times = array_slice( $query_times, -20, 20 );
 								$_SESSION['solr-query-times'] = $query_times;
+								$query_time_data = $background_color_data = array();
+								foreach( $query_times as $query_time ) {
+									$query_time_data[] = $query_time['query_time'];
+									if ( 'on' === $query_time['solr_enabled'] ) {
+										$background_color_data[] = '#1779ba';
+									} else {
+										$background_color_data[] = '#E5E5E5';
+									}
+								}
 								$query_time_data = wp_list_pluck( $query_times, 'query_time' );
 								$query_time_data = array_map( function( $val ){
 									return round( $val, 3 );
@@ -40,17 +49,26 @@
 									$(document).ready(function(){
 										var ctx = $('#query-time-chart');
 										var chart = new Chart( ctx, {
-											type: 'line',
+											type: 'bar',
 											data: {
 												labels: Array( 20 ),
 												datasets: [
 													{
 														label: 'Query Time',
-														data: <?php echo json_encode( $query_time_data ) . PHP_EOL; ?>
+														data: <?php echo json_encode( $query_time_data ) . PHP_EOL; ?>,
+														backgroundColor: <?php echo json_encode( $background_color_data ) . PHP_EOL; ?>
 													}
 												]
 											},
-											options: {}
+											options: {
+												scales: {
+													yAxes: [{
+														ticks: {
+															beginAtZero:true
+														}
+													}]
+												}
+											}
 										});
 									});
 								}(jQuery))
