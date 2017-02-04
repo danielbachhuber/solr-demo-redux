@@ -308,7 +308,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 				$error_msg = SolrPower_Sync::get_instance()->error_msg;
 				WP_CLI::log( "Failed to index {$post_mention}: {$error_msg}" );
 			} else {
-				WP_CLI::log( "Successfully submitted {$post_mention} to index." );
+				WP_CLI::log( "Submitted {$post_mention} to index." );
 				$indexed++;
 			}
 			$total++;
