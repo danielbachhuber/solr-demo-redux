@@ -279,6 +279,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 	$total = $indexed = 0;
 	$solr = get_solr();
 	$update = $solr->createUpdate();
+	$start_time = microtime( true );
 	do {
 		$query = new WP_Query( array(
 			'orderby'        => 'ID',
@@ -287,8 +288,14 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 			'posts_per_page' => 350,
 			'paged'          => $paged,
 		) );
+		$s = microtime( true ) - $start_time;
+		$h = floor($s / 3600);
+		$s -= $h * 3600;
+		$m = floor($s / 60);
+		$s -= $m * 60;
+		$log_time = $h.':'.sprintf('%02d', $m).':'.sprintf('%02d', $s);
 		WP_CLI::log( '' );
-		WP_CLI::log( 'Starting page ' . $paged );
+		WP_CLI::log( 'Starting page ' . $paged . ' at ' . $log_time );
 		WP_CLI::log( '' );
 		foreach( $query->posts as $post ) {
 			$title = html_entity_decode( $post->post_title );
