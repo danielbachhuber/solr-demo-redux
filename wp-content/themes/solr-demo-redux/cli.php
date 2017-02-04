@@ -287,6 +287,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 			'post_type'      => 'movie',
 			'posts_per_page' => 350,
 			'paged'          => $paged,
+			'no_found_rows'  => true,
 		) );
 		$s = microtime( true ) - $start_time;
 		$h = floor($s / 3600);
