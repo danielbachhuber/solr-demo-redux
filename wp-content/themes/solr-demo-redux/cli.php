@@ -284,7 +284,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
 			'post_type'      => 'movie',
-			'posts_per_page' => 200,
+			'posts_per_page' => 350,
 			'paged'          => $paged,
 		) );
 		WP_CLI::log( '' );
