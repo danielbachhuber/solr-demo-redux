@@ -423,13 +423,13 @@ class SolrPower_WP_Query {
 
 		$solr_query = array();
 
-		if ( false !== $query->date_query ) {
-			$solr_query[] = $this->parse_date_query( $query->date_query->queries );
-		}
+		// if ( false !== $query->date_query ) {
+		// 	$solr_query[] = $this->parse_date_query( $query->date_query->queries );
+		// }
 
-		if ( false !== $query->is_date ) {
-			$solr_query[] = $this->parse_date_query( array( $query->query_vars ) );
-		}
+		// if ( false !== $query->is_date ) {
+		// 	$solr_query[] = $this->parse_date_query( array( $query->query_vars ) );
+		// }
 
 		if ( ! empty( $query->meta_query->queries ) ) {
 			$solr_query[] = $this->parse_meta_query( $query->meta_query->queries );
