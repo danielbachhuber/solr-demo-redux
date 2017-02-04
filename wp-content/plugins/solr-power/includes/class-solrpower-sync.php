@@ -248,7 +248,7 @@ class SolrPower_Sync {
 			$doc->setField( 'displaymodified', $post_info->post_modified );
 
 			$post_time = strtotime( $post_info->post_date );
-			$doc->setField( 'year_i', date( 'Y', $post_time ) );
+			// $doc->setField( 'year_i', date( 'Y', $post_time ) );
 			$doc->setField( 'month_i', date( 'm', $post_time ) );
 			$doc->setField( 'day_i', date( 'd', $post_time ) );
 			$doc->setField( 'week_i', date( 'W', $post_time ) );
