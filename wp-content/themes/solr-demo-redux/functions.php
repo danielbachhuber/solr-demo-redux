@@ -134,7 +134,7 @@ add_filter( 'query_vars', function( $query_vars ){
  * before query parameters are transformed to a SQL query.
  */
 add_action( 'pre_get_posts', function( $query ) {
-	if ( is_admin() ) {
+	if ( is_admin() && ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 		return;
 	}
 
