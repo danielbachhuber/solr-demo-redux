@@ -36,7 +36,7 @@
 											$fields['Year'] = '<a href="' . add_query_arg( 'year', $year, home_url( '/' ) ) . '">' . esc_html( $year ) . '</a>';
 										}
 										if ( $rating = get_post_meta( get_the_ID(), 'rating', true ) ) {
-											$fields['Rating'] = '<a href="' . add_query_arg( 'rating', $year, home_url( '/' ) ) . '">' . esc_html( $rating ) . '</a>';
+											$fields['Rating'] = '<a href="' . add_query_arg( 'rating', $rating, home_url( '/' ) ) . '">' . esc_html( $rating ) . '</a>';
 										}
 									foreach( $fields as $label => $link ) {
 										echo '<strong>' . $label . ': </strong> ' . $link . ' ';
