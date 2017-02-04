@@ -264,3 +264,51 @@ WP_CLI::add_command( 'prune-naughty', function(){
 	WP_CLI::success( "Pruned {$naughty} naughty movies of {$total} movies" );
 });
 
+/**
+ * Send movie documents to the solr index
+ *
+ * [--paged=<paged>]
+ * : Start enrichment at a specific point of pagination.
+ *
+ * [--force]
+ * : Restart indexing from the beginning, regardless of whether it's been run.
+ */
+WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
+
+	$paged = WP_CLI\Utils\get_flag_value( $assoc_args, 'paged', 1 );
+	$total = $indexed = 0;
+	$solr = get_solr();
+	$update = $solr->createUpdate();
+	do {
+		$query = new WP_Query( array(
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'post_type'      => 'movie',
+			'posts_per_page' => 200,
+			'paged'          => $paged,
+		) );
+		WP_CLI::log( '' );
+		WP_CLI::log( 'Starting page ' . $paged );
+		WP_CLI::log( '' );
+		foreach( $query->posts as $post ) {
+			$title = html_entity_decode( $post->post_title );
+			$post_mention = "'{$title}' ({$post->ID})";
+			$documents = array();
+			$documents[] = SolrPower_Sync::get_instance()->build_document( $update->createDocument(), $post );
+			$post_it = SolrPower_Sync::get_instance()->post( $documents, true, FALSE );
+
+			if ( false === $post_it ) {
+				$error_msg = SolrPower_Sync::get_instance()->error_msg;
+				WP_CLI::log( "Failed to index {$post_mention}: {$error_msg}" );
+			} else {
+				WP_CLI::log( "Successfully submitted {$post_mention} to index." );
+				$indexed++;
+			}
+			$total++;
+		}
+		$paged++;
+		WP_CLI\Utils\wp_clear_object_cache();
+	} while( count( $query->posts ) );
+
+	WP_CLI::success( "Indexed {$indexed} movies of {$total} movies" );
+});
