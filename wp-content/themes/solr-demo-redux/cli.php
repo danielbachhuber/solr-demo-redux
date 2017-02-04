@@ -276,7 +276,7 @@ WP_CLI::add_command( 'prune-naughty', function(){
 WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 
 	$paged = WP_CLI\Utils\get_flag_value( $assoc_args, 'paged', 1 );
-	$total = $indexed = 0;
+	$total = $indexed = $failed = 0;
 	$solr = get_solr();
 	$update = $solr->createUpdate();
 	$start_time = microtime( true );
@@ -296,7 +296,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 		$s -= $m * 60;
 		$log_time = $h.':'.sprintf('%02d', $m).':'.sprintf('%02d', $s);
 		WP_CLI::log( '' );
-		WP_CLI::log( 'Starting page ' . $paged . ' at ' . $log_time );
+		WP_CLI::log( "Starting page {$paged} at {$log_time} ({$indexed} indexed, {$failed} failed)" );
 		WP_CLI::log( '' );
 		foreach( $query->posts as $post ) {
 			$title = html_entity_decode( $post->post_title );
@@ -308,6 +308,7 @@ WP_CLI::add_command( 'index-movies', function( $_, $assoc_args ) {
 			if ( false === $post_it ) {
 				$error_msg = SolrPower_Sync::get_instance()->error_msg;
 				WP_CLI::log( "Failed to index {$post_mention}: {$error_msg}" );
+				$failed++;
 			} else {
 				WP_CLI::log( "Submitted {$post_mention} to index." );
 				$indexed++;
