@@ -105,13 +105,16 @@ add_filter( 'wp_headers', function( $headers ){
 }, 100 );
 
 /**
- * Enqueue scripts and styles specific to the frontend of the site
+ * Enqueue scripts and styles specific to the frontend of the site.
  */
 add_action( 'wp_enqueue_scripts', function() {
-	$path = '/assets/css/style.css';
-	// Automatically bust the stylesheet cache by appending the file modification time
-	$mtime = filemtime( get_stylesheet_directory() . $path );
-	wp_enqueue_style( 'solr-demo-redux', get_stylesheet_directory_uri() . $path, false, $mtime );
+	$paths = array('sass' => '/assets/css/style.css', 
+		             'overrides' => '/style.css');
+	foreach ($paths as $slug => $path) {
+		// Automatically bust the stylesheet cache by appending the file modification time
+		$mtime = filemtime( get_stylesheet_directory() . $path );
+		wp_enqueue_style( 'solr-demo-redux-' . $slug, get_stylesheet_directory_uri() . $path, false, $mtime );		
+	}
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'chart-js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js' );
 });

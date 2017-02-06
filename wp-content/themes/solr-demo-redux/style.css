@@ -7,3 +7,14 @@ Version:        0.0.0
 */
 
 /** Stylesheet is built to assets/css/style.css **/
+
+/** Do some overrides **/
+.site-content .row .movie {
+  padding: 5px;
+  border: 1px solid gray;
+  min-height: 180px;
+}
+
+.site-content .row .column {
+  margin-bottom: 30px;
+}
