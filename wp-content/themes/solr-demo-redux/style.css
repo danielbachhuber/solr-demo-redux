@@ -11,7 +11,7 @@ Version:        0.0.0
 /** Do some overrides **/
 .site-content .row .movie {
   padding: 5px;
-  border: 1px solid gray;
+  border: 1px dotted gray;
   min-height: 180px;
 }
 
