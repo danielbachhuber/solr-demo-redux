@@ -145,8 +145,8 @@ add_action( 'pre_get_posts', function( $query ) {
 	// Posts and pages aren't used on this site.
 	$query->set( 'post_type', 'movie' );
 
-	// On the homepage, sort by title
-	if ( $query->is_home() ) {
+	// On all non-singular and non-search pages, display by title
+	if ( ! $query->is_singular() && ! $query->is_search() ) {
 		$query->set( 'order', 'ASC' );
 		$query->set( 'orderby', 'title' );
 	}
