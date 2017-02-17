@@ -230,6 +230,16 @@ add_filter( 'default_option_plugin_s4wp_settings', $sdr_filter_option_index_meta
 add_filter( 'option_plugin_s4wp_settings', $sdr_filter_option_index_meta );
 
 /**
+ * Set the 'year' attribute always to the meta value
+ *
+ * Prevents an exception from being thrown for the field.
+ */
+add_filter( 'solr_build_document', function( $doc, $post_info ){
+	$doc->setField( 'year_i', get_post_meta( $post_info->ID, 'year', true ) );
+	return $doc;
+}, 10, 2 );
+
+/**
  * Get an array of post meta keys used as a part of the movie data.
  *
  * Each of these keys represents an attribute that can be present in the
