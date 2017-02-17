@@ -148,7 +148,7 @@ add_action( 'pre_get_posts', function( $query ) {
 	// On all non-singular and non-search pages, display by title
 	if ( ! $query->is_singular() && ! $query->is_search() ) {
 		$query->set( 'order', 'ASC' );
-		$query->set( 'orderby', 'title' );
+		$query->set( 'orderby', 'post_name' );
 	}
 
 	if ( ! $query->is_singular() ) {
